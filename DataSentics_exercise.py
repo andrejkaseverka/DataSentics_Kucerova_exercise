@@ -1,6 +1,7 @@
 import pandas as pd
 import sys
 import csv
+from collections import defaultdict
 
 # Saving the names of the folders where to find the data
 users_address = 'BX-CSV-Dump/BX-Users.csv'
@@ -21,20 +22,32 @@ def find_people_based_on_rating(ISBN, rating):
 # Asking the user for a book of his choice
 favourite_book = input('Please, enter the exact name of your favourite book: ')
 
-# Searching for the ISBN of favourite book
-favourite_ISBN = ''
+# Creating dictionary of book titles and all related ISBN's
+dict_of_ISBN = defaultdict(list)
 handle = open(books_address, 'r')
 reader = csv.DictReader(handle, delimiter=';')
 for row in reader:
-    if row['Book-Title']==str(favourite_book):
-        favourite_ISBN = row['ISBN']
-        break
+    dict_of_ISBN[row['Book-Title']].append(row['ISBN'])
 handle.close()
 
+## Searching for the ISBN of favourite book
+#favourite_ISBN = ''
+#handle = open(books_address, 'r')
+#reader = csv.DictReader(handle, delimiter=';')
+#for row in reader:
+#    if row['Book-Title']==str(favourite_book):
+#        favourite_ISBN = row['ISBN']
+#        break
+#handle.close()
+
 # Checking if the title is correct, if it is not, it exits the program
-if favourite_ISBN=='':
+if favourite_book not in dict_of_ISBN:
     print('Sorry, but I do not know this book. Are you sure you typed the title correctly?')
     sys.exit()
+
+#if favourite_ISBN=='':
+#    print('Sorry, but I do not know this book. Are you sure you typed the title correctly?')
+#    sys.exit()
 
 # Preparing list of 10 book suggestions, so far with empty strings
 suggestions_ISBN = ['']*10
