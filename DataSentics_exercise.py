@@ -20,7 +20,7 @@ def find_people_based_on_rating(title, rating):
     return users
 
 # Asking the user for a book of his choice
-favourite_book = input('Please, enter the exact name of your favourite book: ')
+favourite_book = input('\nPlease, enter the exact name of your favourite book: ')
 
 # Creating dictionary of book titles and all related ISBN's
 dict_of_ISBN = defaultdict(list)
@@ -32,7 +32,7 @@ handle.close()
 
 # Checking if the title is correct, if it is not, it exits the program
 if favourite_book not in dict_of_ISBN:
-    print('Sorry, but I do not know this book. Are you sure you typed the title correctly?')
+    print('\nSorry, but I do not know this book. Are you sure you typed the title correctly?\n')
     sys.exit()
 
 # Preparing list of 10 book suggestions, so far with empty strings
@@ -77,6 +77,11 @@ while (len(dict_of_candidates_title)<10) and (rating_processing>5):
                 dict_of_candidates_title[title] = rating_processing*sum_rating
     rating_processing -= 1
 
+# In case no one liked the favourite book, I appologise
+if len(dict_of_candidates_title)==0:
+    print('\nIt seems that nobody else liked this specific book. I cannot offer any suggestions.\n')
+    sys.exit()
+
 # Filling the suggestions_title according to dict_of_candidates_title
 for title in dict_of_candidates_title: # Try to place the book title accordingly into suggestions_title
     placed = False
@@ -103,3 +108,4 @@ for title in dict_of_candidates_title: # Try to place the book title accordingly
 # Printing the result
 print('\nI think you might like the following titles:\n')
 print(*suggestions_title, sep='\n')
+print('\n')
