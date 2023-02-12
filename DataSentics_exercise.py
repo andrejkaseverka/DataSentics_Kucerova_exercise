@@ -41,7 +41,8 @@ suggestions_title = ['']*10
 # Getting through the table of ratings to find people that rated the favourite book 10 (or less if
 # I do not find enough book recommendations to fill the suggestions_ISBN)
 rating_processing = 10
-while (suggestions_title[9]=='') and (rating_processing>5):
+dict_of_candidates_title = {}
+while (len(dict_of_candidates_title)<10) and (rating_processing>5):
     users_processing = find_people_based_on_rating(favourite_book, rating_processing)
     dict_of_candidates_ISBN = {} # Book candidates for suggestions are stored in a dictionary, key=ISBN, value=ratings
     # After processing I will need to process the dict_of_candidates_ISBN to get final numbers for titles
@@ -64,38 +65,40 @@ while (suggestions_title[9]=='') and (rating_processing>5):
     handle.close()
 
     # Now I need to transfer the ratings for ISBN to ratings of titles
-    dict_of_candidates_title = {}
     for title in dict_of_ISBN:
         sum_rating = 0
         for ISBN in dict_of_ISBN[title]:
             if ISBN in dict_of_candidates_ISBN:
                 sum_rating += int(dict_of_candidates_ISBN[ISBN])
         if sum_rating>0:
-            dict_of_candidates_title[title] = sum_rating
-    
-    # Filling the suggestions_title according to dict_of_candidates_title
-    for title in dict_of_candidates_title: # Try to place the book title accordingly into suggestions_title
-        placed = False
-        i = 10
-        while not placed:
-            if i==0:
-                # I got at the beginning
-                suggestions_title[i] = title
-                placed = True
-            elif (suggestions_title[i-1]==''):
-                # The list still has empty places
-                i -= 1
-            elif dict_of_candidates_title[title]<=dict_of_candidates_title[suggestions_title[i-1]]:
-                # I found the right spot
-                if i<10:
-                    suggestions_title[i] = title
-                placed = True                               
-            elif dict_of_candidates_title[title]>dict_of_candidates_title[suggestions_title[i-1]]:
-                # Need to move the one on the left
-                if i<10:
-                    suggestions_title[i] = suggestions_title[i-1]
-                i -= 1
+            if title in dict_of_candidates_title:
+                dict_of_candidates_title[title] = dict_of_candidates_title[title] + rating_processing*sum_rating
+            else:
+                dict_of_candidates_title[title] = rating_processing*sum_rating
     rating_processing -= 1
+
+# Filling the suggestions_title according to dict_of_candidates_title
+for title in dict_of_candidates_title: # Try to place the book title accordingly into suggestions_title
+    placed = False
+    i = 10
+    while not placed:
+        if i==0:
+            # I got at the beginning
+            suggestions_title[i] = title
+            placed = True
+        elif (suggestions_title[i-1]==''):
+            # The list still has empty places
+            i -= 1
+        elif dict_of_candidates_title[title]<=dict_of_candidates_title[suggestions_title[i-1]]:
+            # I found the right spot
+            if i<10:
+                suggestions_title[i] = title
+            placed = True                               
+        elif dict_of_candidates_title[title]>dict_of_candidates_title[suggestions_title[i-1]]:
+            # Need to move the one on the left
+            if i<10:
+                suggestions_title[i] = suggestions_title[i-1]
+            i -= 1
 
 # Printing the result
 print('\nI think you might like the following titles:\n')
