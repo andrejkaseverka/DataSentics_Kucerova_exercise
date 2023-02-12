@@ -8,7 +8,7 @@ The whole unziped file needs to be placed in the same directory as the DataSenti
 I found out that there are some mismatches in the ISBN of the books in BX-Books and BX-Book-Ratings. They lead to occasional blank spaces in the output (because the program cannot find in BX-Books the corresponding name to the ISBN from a review in BX-Book-Ratings). This is for example the case of Memoirs of a Geisha and the problem appears when I try to find recommendatios based on the book The Pillars of the Earth in the original main branch.
 
 In the branch feature I fixed the problem of searching specific ISBN instead of title itself.
-In the branch clearthebug I fixed a bug with sorting the books into suggestions_titles.
+In the branch clearthebug I have the solution from feature and I fixed a bug with sorting the books into suggestions_titles.
 
 STRUCTURE:
 I described the structure of the code in the comments. The basic idea was to find people that also liked the given book and then compare books these people also rated highly. Result is a list of 10 suggestions.
